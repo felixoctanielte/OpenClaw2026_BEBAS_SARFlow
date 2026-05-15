@@ -1,0 +1,44 @@
+{
+  "incident_id": "string|null",
+  "incident_type": "pendaki_hilang|orang_hilang|kecelakaan_air|banjir|kecelakaan|lainnya|null",
+  "location_text": "string|null",
+  "coordinates": {
+    "lat": "number|null",
+    "lng": "number|null"
+  },
+  "report_time": "string|null",
+  "last_seen_time": "string|null",
+  "victim_count": "number|null",
+  "victims": [
+    {
+      "name": "string|null",
+      "age": "number|null",
+      "condition": "string|null",
+      "last_clothing": "string|null",
+      "notes": "string|null"
+    }
+  ],
+  "reporter": {
+    "name": "string|null",
+    "contact": "string|null",
+    "relation": "string|null"
+  },
+  "weather_or_field_condition": "string|null",
+  "access_notes": "string|null",
+  "missing_fields": [
+    "string"
+  ],
+  "red_flags": [
+    "string"
+  ],
+  "administrative_priority": "Rendah|Sedang|Tinggi|Kritis",
+  "verification_status": "needs_verification|partially_verified|verified",
+  "field_confidence": {
+    "incident_type": "confirmed|inferred|missing|conflict",
+    "location_text": "confirmed|inferred|missing|conflict",
+    "last_seen_time": "confirmed|inferred|missing|conflict",
+    "victim_count": "confirmed|inferred|missing|conflict",
+    "reporter_contact": "confirmed|inferred|missing|conflict"
+  }
+}
+
