@@ -33,7 +33,7 @@ Sudah ada:
 - knowledge base SOP;
 - template laporan dan timeline;
 - skill QwenPaw awal, tapi setup QwenPaw ditunda;
-- test untuk skenario pendaki hilang dan gunung meletus.
+- test untuk skenario pendaki hilang, gunung meletus, banjir, dan kecelakaan air.
 
 ## Urutan Kerja Mulai Sekarang
 
@@ -65,4 +65,3 @@ Untuk test:
 ```powershell
 python -m pytest -q
 ```
-

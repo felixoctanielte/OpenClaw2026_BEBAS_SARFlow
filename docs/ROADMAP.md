@@ -23,13 +23,18 @@ Target:
 - draft laporan bisa dibuat.
 
 Checklist:
-- perkuat extraction untuk `pendaki_hilang`;
-- perkuat extraction untuk `gunung_meletus`;
-- tambah skenario `banjir`;
-- tambah skenario `kecelakaan_air`;
-- tambah field `pelapor tiba-tiba hilang/tidak bisa dihubungi`;
-- tambah field baju/jaket/celana korban;
-- tambah test untuk semua skenario.
+- perkuat extraction untuk `pendaki_hilang` - done;
+- perkuat extraction untuk `gunung_meletus` - done;
+- tambah skenario `banjir` - done;
+- tambah skenario `kecelakaan_air` - done;
+- tambah field `pelapor tiba-tiba hilang/tidak bisa dihubungi` - done;
+- tambah field baju/jaket/celana korban - done;
+- tambah test untuk semua skenario - done.
+
+Next:
+- validasi wording briefing;
+- gunakan command `--command json` sebagai output backend;
+- tambah API context BMKG/PetaBencana sebagai optional card.
 
 ## Phase 2 - RAG SOP
 
@@ -100,4 +105,3 @@ Output:
 - demo video;
 - public GitHub repo;
 - Devpost description.
-

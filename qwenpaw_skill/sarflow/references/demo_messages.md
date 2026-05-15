@@ -23,3 +23,20 @@ SARFLOW UPDATE:
 Pelapor kirim link maps titik terakhir: -7.6275, 111.1942. Korban terakhir terlihat jam 17.40 sebelum kontak terakhir 18.10.
 ```
 
+## Banjir
+
+```text
+SARFLOW INTAKE:
+Ada banjir di Desa Melati, 5 warga terjebak di rumah.
+Pelapor Andi nomor 081222333444. Air naik sejak jam 20.15,
+akses jalan utama tertutup.
+```
+
+## Kecelakaan Air
+
+```text
+SARFLOW INTAKE:
+Laporan perahu nelayan mati mesin di Perairan Tanjung Pasir.
+Ada 2 nelayan di kapal, terakhir kontak jam 05.20.
+Pelapor Sari nomor 081555666777, gelombang tinggi dan arus deras.
+```

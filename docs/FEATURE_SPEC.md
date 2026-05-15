@@ -60,6 +60,8 @@ Red flag:
 - pelapor/korban tidak bisa dihubungi;
 - SOS/distress;
 - gunung/laut/sungai/hutan/daerah bencana.
+- banjir dengan warga terjebak/terisolir;
+- kecelakaan air seperti perahu/kapal mati mesin, hanyut, tenggelam, atau terseret arus.
 
 Briefing harus singkat dan bisa dibaca cepat oleh petugas.
 
@@ -89,4 +91,3 @@ Draft selalu diberi label:
 ```text
 Draft administratif - perlu verifikasi petugas.
 ```
-

@@ -13,12 +13,12 @@ def detect_incident_type(text):
     t = text.lower()
     if any(word in t for word in ["gunung meletus", "erupsi", "lahar", "abu vulkanik"]):
         return "gunung_meletus"
+    if "banjir" in t or any(word in t for word in ["air naik", "terendam", "genangan"]):
+        return "banjir"
     if any(word in t for word in ["pendaki", "gunung", "pos "]) and any(word in t for word in ["hilang", "belum turun", "tersesat"]):
         return "pendaki_hilang"
-    if any(word in t for word in ["nelayan", "perahu", "kapal", "laut", "tenggelam"]):
+    if any(word in t for word in ["nelayan", "perahu", "kapal", "laut", "tenggelam", "hanyut", "terseret arus", "mati mesin"]):
         return "kecelakaan_air"
-    if "banjir" in t:
-        return "banjir"
     if any(word in t for word in ["orang hilang", "anak hilang", "lansia hilang"]):
         return "orang_hilang"
     if any(word in t for word in ["kecelakaan", "tabrakan"]):
@@ -28,10 +28,15 @@ def detect_incident_type(text):
 
 def extract_location(text):
     patterns = [
-        r"(?:di|sekitar|lokasi|titik terakhir(?:nya)?(?: sekitar)?|dari)\s+([^.\n,]+(?:Gunung|Pos|Pantai|Sungai|Desa|Kecamatan|Kabupaten|Kota|Pulau|Hutan|Jalur|Merapi|Lawu|Semeru|Rinjani)[^.\n,]*)",
+        r"(?:di|lokasi|titik terakhir(?:nya)?(?: sekitar)?|dari)\s+((?:sekitar\s+)?(?:Gunung|Pos|Pantai|Sungai|Desa|Kecamatan|Kabupaten|Kota|Pulau|Hutan|Jalur|Perairan|Muara|Pelabuhan|Danau|Waduk|Merapi|Lawu|Semeru|Rinjani)[^.\n,]*)",
+        r"(?:sekitar)\s+((?:Gunung|Pos|Pantai|Sungai|Desa|Kecamatan|Kabupaten|Kota|Pulau|Hutan|Jalur|Perairan|Muara|Pelabuhan|Danau|Waduk|Merapi|Lawu|Semeru|Rinjani)[^.\n,]*)",
+        r"((?:Gunung|Pos|Pantai|Sungai|Desa|Kecamatan|Kabupaten|Kota|Pulau|Hutan|Jalur|Perairan|Muara|Pelabuhan|Danau|Waduk)\s+[^.\n,]+)",
         r"(Pos\s*\d+[^.\n,]*)",
-        r"(Gunung\s+[A-Za-z0-9 .'-]+)",
-        r"(Desa\s+[A-Za-z0-9 .'-]+)",
+        r"(Gunung\s+[^.\n,]+)",
+        r"(Desa\s+[^.\n,]+)",
+        r"(Perairan\s+[^.\n,]+)",
+        r"(Pantai\s+[^.\n,]+)",
+        r"(Sungai\s+[^.\n,]+)",
     ]
     for pattern in patterns:
         value = first_match(pattern, text)
@@ -98,7 +103,7 @@ def extract_contact(text):
 def extract_weather_or_field(text):
     signals = []
     lower = text.lower()
-    for word in ["hujan", "cuaca buruk", "kabut", "banjir", "longsor", "arus deras", "gelombang tinggi", "sinyal putus", "abu vulkanik", "erupsi", "lahar"]:
+    for word in ["hujan", "cuaca buruk", "kabut", "banjir", "longsor", "arus deras", "gelombang tinggi", "sinyal putus", "air naik", "terendam", "akses tertutup", "jalan tertutup", "perahu mati mesin", "kapal mati mesin", "hanyut", "terseret arus", "abu vulkanik", "erupsi", "lahar"]:
         if word in lower:
             signals.append(word)
     return ", ".join(signals) if signals else None
@@ -126,6 +131,58 @@ def extract_clothing(text):
     return ", ".join(clothing_bits) if clothing_bits else None
 
 
+def extract_condition(text):
+    lower = text.lower()
+    signals = []
+    if "mati mesin" in lower:
+        if "perahu" in lower:
+            signals.append("perahu mati mesin")
+        elif "kapal" in lower:
+            signals.append("kapal mati mesin")
+        else:
+            signals.append("mati mesin")
+    for word in [
+        "cedera",
+        "sakit",
+        "luka",
+        "lemas",
+        "hipotermia",
+        "terjebak",
+        "terisolir",
+        "terseret arus",
+        "hanyut",
+        "tenggelam",
+        "perahu mati mesin",
+        "kapal mati mesin",
+        "logistik tinggal sedikit",
+        "kehabisan logistik",
+        "hp mati",
+        "sinyal putus",
+        "air naik",
+    ]:
+        if word in lower:
+            signals.append(word)
+    return ", ".join(dict.fromkeys(signals)) if signals else None
+
+
+def extract_access_notes(text):
+    lower = text.lower()
+    notes = []
+    for phrase in [
+        "akses jalan utama tertutup",
+        "akses tertutup",
+        "jalan utama tertutup",
+        "jalan tertutup",
+        "jembatan putus",
+        "arus deras",
+        "gelombang tinggi",
+        "sinyal putus",
+    ]:
+        if phrase in lower and not any(phrase in existing or existing in phrase for existing in notes):
+            notes.append(phrase)
+    return ", ".join(notes) if notes else None
+
+
 def compute_risk(data, text):
     score = 0
     red_flags = []
@@ -146,13 +203,15 @@ def compute_risk(data, text):
         add(3, "indikasi cedera/sakit/bahaya fisik")
     if any(word in lower for word in ["anak", "lansia", "disabilitas"]):
         add(3, "korban rentan")
-    if any(word in lower for word in ["hujan", "cuaca buruk", "kabut", "longsor", "banjir", "arus deras", "gelombang tinggi", "erupsi", "abu vulkanik", "lahar"]):
+    if any(word in lower for word in ["hujan", "cuaca buruk", "kabut", "longsor", "banjir", "air naik", "akses tertutup", "jalan tertutup", "arus deras", "gelombang tinggi", "erupsi", "abu vulkanik", "lahar"]):
         add(2, "cuaca/lapangan berisiko")
     if any(word in lower for word in ["logistik tinggal sedikit", "tanpa logistik", "kehabisan logistik", "sinyal putus", "hp mati"]):
         add(2, "logistik/komunikasi terbatas")
     if any(word in lower for word in ["sos", "minta tolong", "darurat"]):
         add(3, "sinyal darurat")
-    if data["incident_type"] in ["pendaki_hilang", "kecelakaan_air", "gunung_meletus"] or any(word in lower for word in ["hutan", "gunung", "laut", "sungai"]):
+    if any(word in lower for word in ["terjebak", "terisolir", "tenggelam", "hanyut", "terseret arus", "mati mesin"]):
+        add(2, "korban dalam kondisi membutuhkan verifikasi cepat")
+    if data["incident_type"] in ["pendaki_hilang", "kecelakaan_air", "gunung_meletus", "banjir"] or any(word in lower for word in ["hutan", "gunung", "laut", "sungai"]):
         add(2, "medan/lokasi berisiko")
     if not data["reporter"]["contact"]:
         add(2, "kontak pelapor belum ada")
@@ -179,6 +238,8 @@ def build_result(text):
     reporter_name = extract_reporter_name(text)
     weather = extract_weather_or_field(text)
     clothing = extract_clothing(text)
+    condition = extract_condition(text)
+    access_notes = extract_access_notes(text)
 
     missing = []
     if not location_text:
@@ -205,7 +266,7 @@ def build_result(text):
             {
                 "name": None,
                 "age": None,
-                "condition": None,
+                "condition": condition,
                 "last_clothing": clothing,
                 "notes": None,
             }
@@ -216,7 +277,7 @@ def build_result(text):
             "relation": "pelapor/rombongan" if "teman" in text.lower() or "rombongan" in text.lower() else None,
         },
         "weather_or_field_condition": weather,
-        "access_notes": None,
+        "access_notes": access_notes,
         "missing_fields": missing,
         "red_flags": [],
         "administrative_priority": "Rendah",

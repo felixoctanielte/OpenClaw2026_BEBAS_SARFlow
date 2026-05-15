@@ -23,6 +23,7 @@ def build_briefing(incident: dict, follow_up_questions: list[str], sop_context: 
         f"- Pakaian terakhir: {_value(victim.get('last_clothing'))}",
         f"- Pelapor: {_value(incident.get('reporter', {}).get('name'))} / {_value(incident.get('reporter', {}).get('contact'))}",
         f"- Cuaca/lapangan: {_value(incident.get('weather_or_field_condition'))}",
+        f"- Akses: {_value(incident.get('access_notes'))}",
         "",
         f"Prioritas administratif: {incident.get('administrative_priority')} (skor {incident.get('risk_score')})",
         "Alasan red flag:",
@@ -55,9 +56,7 @@ def build_briefing(incident: dict, follow_up_questions: list[str], sop_context: 
     )
 
     if sop_context:
-        lines.extend(["", "RAG/SOP context:"])
-        for source in sop_context:
-            lines.append(f"- {source['id']}: {source['snippet']}")
+        source_ids = ", ".join(source["id"] for source in sop_context)
+        lines.extend(["", f"RAG/SOP context: {source_ids}"])
 
     return "\n".join(lines)
-
