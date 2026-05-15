@@ -1,0 +1,52 @@
+{
+  "incident_type": "pendaki_hilang",
+  "location_text": "Pos 3 Gunung Lawu",
+  "coordinates": {
+    "lat": null,
+    "lng": null
+  },
+  "report_time": "2026-05-15T11:41:02+07:00",
+  "last_seen_time": "18:10 WIB",
+  "victim_count": 2,
+  "victims": [
+    {
+      "name": null,
+      "age": null,
+      "condition": "logistik tinggal sedikit, sinyal putus",
+      "last_clothing": null,
+      "notes": null
+    }
+  ],
+  "reporter": {
+    "name": null,
+    "contact": "081234567890",
+    "relation": "teman/rombongan"
+  },
+  "weather_or_field_condition": "hujan, sinyal putus",
+  "access_notes": null,
+  "missing_fields": [
+    "nama pelapor",
+    "koordinat/link maps",
+    "pakaian terakhir korban, termasuk baju dan celana"
+  ],
+  "red_flags": [
+    "lokasi/koordinat belum presisi",
+    "korban lebih dari satu",
+    "cuaca/lapangan berisiko",
+    "logistik/komunikasi terbatas",
+    "medan/lokasi berisiko"
+  ],
+  "administrative_priority": "Tinggi",
+  "verification_status": "needs_verification",
+  "field_confidence": {
+    "incident_type": "inferred",
+    "location_text": "confirmed",
+    "coordinates": "missing",
+    "last_seen_time": "confirmed",
+    "victim_count": "confirmed",
+    "reporter_name": "missing",
+    "reporter_contact": "confirmed",
+    "last_clothing": "missing"
+  },
+  "risk_score": 10
+}

@@ -1,0 +1,23 @@
+- id: sar_sop_sk_kbsn_154
+  path: knowledge_base/sar_sop_sk_kbsn_154.md
+  description: SOP pelayanan operasi pencarian dan pertolongan berdasarkan SK KBSN 154.
+  use_for:
+    - intake checklist
+    - verification flow
+    - timeline/report guardrails
+
+- id: rag_design
+  path: knowledge_base/rag_design.md
+  description: Desain penggunaan RAG SARFlow dan guardrail.
+  use_for:
+    - agent workflow
+    - safety guardrails
+    - retrieval points
+
+- id: api_sources
+  path: knowledge_base/api_sources.md
+  description: Referensi API PetaBencana, BMKG, Satu Peta MKG, dan BNPB.
+  use_for:
+    - external context
+    - future API connectors
+

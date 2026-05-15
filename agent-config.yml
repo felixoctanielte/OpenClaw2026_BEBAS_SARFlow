@@ -1,0 +1,44 @@
+agent:
+  name: SARFlow
+  role: KOM administrative SAR co-pilot
+  language: id
+  timezone: Asia/Jakarta
+  modules:
+    - intake
+    - extraction
+    - briefing
+    - timeline
+    - report
+  rag_sources: RAG_sources.yaml
+  safety:
+    verification_label: "Belum terverifikasi - perlu konfirmasi petugas."
+    forbidden_actions:
+      - "Mengambil keputusan evakuasi final"
+      - "Menggantikan komando lapangan"
+      - "Menyebarkan informasi belum terverifikasi"
+      - "Mengklaim lokasi korban secara pasti"
+  api:
+    bmkg:
+      enabled: false
+      base_url: "https://api.bmkg.go.id/publik/prakiraan-cuaca"
+      api_key_env: "BMKG_API_KEY"
+    petabencana:
+      enabled: false
+      base_url: "https://data.petabencana.id"
+      user_agent: "SARFlow-Agent/0.1"
+
+intake:
+  max_follow_up_questions: 3
+  critical_fields:
+    - reporter.name
+    - reporter.contact
+    - incident_type
+    - location_text
+    - last_seen_time
+    - victim_count
+    - victims.last_clothing
+
+storage:
+  state_file: data/incident_state.json
+  timeline_file: data/timeline.jsonl
+

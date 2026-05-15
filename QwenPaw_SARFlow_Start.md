@@ -33,6 +33,30 @@ Discord message
 
 ## Minimum Setup Checklist
 
+### 0. Fix Bootstrap Mode Kalau QwenPaw Nyasar
+
+Kalau QwenPaw membalas seperti:
+
+```text
+BOOTSTRAP MODE `BOOTSTRAP.md` exists - first-time setup.
+Tell me a bit about yourself...
+```
+
+artinya agent belum memakai persona SARFlow. Solusinya:
+
+1. Buka QwenPaw Console.
+2. Masuk `Workspace -> Files`.
+3. Cari `BOOTSTRAP.md`.
+4. Disable dari system prompt atau hapus setelah setup awal selesai.
+5. Tambahkan/enable `SARFLOW.md` dari folder `qwenpaw_workspace/SARFLOW.md`.
+6. Pastikan `AGENTS.md`, `SOUL.md`, `PROFILE.md`, dan `SARFLOW.md` yang aktif, bukan `BOOTSTRAP.md`.
+
+Setelah itu coba lagi dari Discord dengan awalan:
+
+```text
+SARFLOW INTAKE:
+```
+
 ### 1. Confirm Discord Bot Works
 
 Di Discord, pastikan bot bisa membalas pesan biasa.
@@ -191,4 +215,3 @@ QwenPaw official references:
 - Skills docs: https://qwenpaw.agentscope.io/docs/skills/
 - Channels docs: https://qwenpaw.agentscope.io/docs/channels/
 - Config docs: https://qwenpaw.agentscope.io/docs/config/
-

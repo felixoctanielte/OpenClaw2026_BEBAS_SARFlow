@@ -11,6 +11,8 @@ def first_match(pattern, text, flags=re.I):
 
 def detect_incident_type(text):
     t = text.lower()
+    if any(word in t for word in ["gunung meletus", "erupsi", "lahar", "abu vulkanik"]):
+        return "gunung_meletus"
     if any(word in t for word in ["pendaki", "gunung", "pos "]) and any(word in t for word in ["hilang", "belum turun", "tersesat"]):
         return "pendaki_hilang"
     if any(word in t for word in ["nelayan", "perahu", "kapal", "laut", "tenggelam"]):
@@ -26,9 +28,10 @@ def detect_incident_type(text):
 
 def extract_location(text):
     patterns = [
-        r"(?:di|sekitar|lokasi|titik terakhir(?:nya)?(?: sekitar)?|dari)\s+([^.\n,]+(?:Gunung|Pos|Pantai|Sungai|Desa|Kecamatan|Kabupaten|Kota|Pulau|Hutan|Jalur)[^.\n]*)",
+        r"(?:di|sekitar|lokasi|titik terakhir(?:nya)?(?: sekitar)?|dari)\s+([^.\n,]+(?:Gunung|Pos|Pantai|Sungai|Desa|Kecamatan|Kabupaten|Kota|Pulau|Hutan|Jalur|Merapi|Lawu|Semeru|Rinjani)[^.\n,]*)",
         r"(Pos\s*\d+[^.\n,]*)",
         r"(Gunung\s+[A-Za-z0-9 .'-]+)",
+        r"(Desa\s+[A-Za-z0-9 .'-]+)",
     ]
     for pattern in patterns:
         value = first_match(pattern, text)
@@ -57,7 +60,7 @@ def extract_time(text):
 
 
 def extract_victim_count(text):
-    digit = first_match(r"\b(\d+)\s*(?:orang|korban|pendaki|nelayan|wisatawan)\b", text)
+    digit = first_match(r"\b(\d+)\s*(?:orang|korban|pendaki|nelayan|wisatawan|warga)\b", text)
     if digit:
         return int(digit)
     words = {
@@ -70,9 +73,21 @@ def extract_victim_count(text):
     }
     lower = text.lower()
     for word, number in words.items():
-        if re.search(rf"\b{word}\s+(orang|korban|pendaki|nelayan|wisatawan)\b", lower):
+        if re.search(rf"\b{word}\s+(orang|korban|pendaki|nelayan|wisatawan|warga)\b", lower):
             return number
     return None
+
+
+def extract_reporter_name(text):
+    candidate = first_match(
+        r"(?:nama pelapor|pelapor(?: atas nama)?|saya)\s*[:\-]?\s*([A-Za-z .']{3,40}?)(?=\s+(?:nomor|no|kontak|hp|telepon)\b|[.,\n]|$)",
+        text,
+    )
+    if not candidate:
+        return None
+    if any(word in candidate.lower() for word in ["teman", "rombongan", "keluarga", "warga sekitar"]):
+        return None
+    return candidate.strip()
 
 
 def extract_contact(text):
@@ -83,15 +98,32 @@ def extract_contact(text):
 def extract_weather_or_field(text):
     signals = []
     lower = text.lower()
-    for word in ["hujan", "cuaca buruk", "kabut", "banjir", "longsor", "arus deras", "gelombang tinggi", "sinyal putus"]:
+    for word in ["hujan", "cuaca buruk", "kabut", "banjir", "longsor", "arus deras", "gelombang tinggi", "sinyal putus", "abu vulkanik", "erupsi", "lahar"]:
         if word in lower:
             signals.append(word)
     return ", ".join(signals) if signals else None
 
 
 def extract_clothing(text):
-    match = re.search(r"(?:pakai|memakai|pakaian|jaket|baju)\s+([^.\n]+)", text, re.I)
-    return match.group(0).strip() if match else None
+    clothing_bits = []
+    specific_patterns = [
+        r"(?:baju|kaos|kemeja)\s+(?:warna\s+)?([A-Za-z]+)",
+        r"(?:celana)\s+(?:warna\s+)?([A-Za-z]+)",
+        r"(?:jaket)\s+(?:warna\s+)?([A-Za-z]+)",
+        r"(?:carrier|tas)\s+(?:warna\s+)?([A-Za-z]+)",
+    ]
+    for pattern in specific_patterns:
+        for match in re.finditer(pattern, text, re.I):
+            phrase = match.group(0).strip()
+            if phrase not in clothing_bits:
+                clothing_bits.append(phrase)
+    if clothing_bits:
+        return ", ".join(clothing_bits)
+    for match in re.finditer(r"(?:pakai|memakai)\s+([^.\n]+)", text, re.I):
+        phrase = match.group(0).strip()
+        if phrase not in clothing_bits:
+            clothing_bits.append(phrase)
+    return ", ".join(clothing_bits) if clothing_bits else None
 
 
 def compute_risk(data, text):
@@ -114,13 +146,13 @@ def compute_risk(data, text):
         add(3, "indikasi cedera/sakit/bahaya fisik")
     if any(word in lower for word in ["anak", "lansia", "disabilitas"]):
         add(3, "korban rentan")
-    if any(word in lower for word in ["hujan", "cuaca buruk", "kabut", "longsor", "banjir", "arus deras", "gelombang tinggi"]):
+    if any(word in lower for word in ["hujan", "cuaca buruk", "kabut", "longsor", "banjir", "arus deras", "gelombang tinggi", "erupsi", "abu vulkanik", "lahar"]):
         add(2, "cuaca/lapangan berisiko")
     if any(word in lower for word in ["logistik tinggal sedikit", "tanpa logistik", "kehabisan logistik", "sinyal putus", "hp mati"]):
         add(2, "logistik/komunikasi terbatas")
     if any(word in lower for word in ["sos", "minta tolong", "darurat"]):
         add(3, "sinyal darurat")
-    if data["incident_type"] in ["pendaki_hilang", "kecelakaan_air"] or any(word in lower for word in ["hutan", "gunung", "laut", "sungai"]):
+    if data["incident_type"] in ["pendaki_hilang", "kecelakaan_air", "gunung_meletus"] or any(word in lower for word in ["hutan", "gunung", "laut", "sungai"]):
         add(2, "medan/lokasi berisiko")
     if not data["reporter"]["contact"]:
         add(2, "kontak pelapor belum ada")
@@ -144,6 +176,7 @@ def build_result(text):
     last_seen_time = extract_time(text)
     victim_count = extract_victim_count(text)
     contact = extract_contact(text)
+    reporter_name = extract_reporter_name(text)
     weather = extract_weather_or_field(text)
     clothing = extract_clothing(text)
 
@@ -178,7 +211,7 @@ def build_result(text):
             }
         ],
         "reporter": {
-            "name": None,
+            "name": reporter_name,
             "contact": contact,
             "relation": "pelapor/rombongan" if "teman" in text.lower() or "rombongan" in text.lower() else None,
         },
@@ -193,7 +226,9 @@ def build_result(text):
             "location_text": "confirmed" if location_text else "missing",
             "last_seen_time": "confirmed" if last_seen_time else "missing",
             "victim_count": "confirmed" if victim_count is not None else "missing",
+            "reporter_name": "confirmed" if reporter_name else "missing",
             "reporter_contact": "confirmed" if contact else "missing",
+            "last_clothing": "confirmed" if clothing else "missing",
         },
     }
 
