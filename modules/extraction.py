@@ -280,11 +280,17 @@ def extract_incident(text: str) -> dict:
         "access_notes": extract_access_notes(text),
         "missing_fields": [],
         "red_flags": [],
+        "conflicts": [],
+        "context_cards": [],
         "administrative_priority": "Rendah",
         "verification_status": "needs_verification",
         "field_confidence": {},
     }
 
+    return refresh_incident_metadata(incident, text)
+
+
+def refresh_incident_metadata(incident: dict, text: str = "") -> dict:
     missing = []
     if not incident["reporter"]["name"]:
         missing.append("nama pelapor")
@@ -312,6 +318,10 @@ def extract_incident(text: str) -> dict:
         "reporter_contact": "confirmed" if incident["reporter"]["contact"] else "missing",
         "last_clothing": "confirmed" if incident["victims"][0]["last_clothing"] else "missing",
     }
+    for conflict in incident.get("conflicts", []):
+        field = conflict.get("field")
+        if field:
+            incident["field_confidence"][field.replace(".", "_")] = "conflict"
     score, priority, red_flags = compute_risk(incident, text)
     incident["risk_score"] = score
     incident["administrative_priority"] = priority

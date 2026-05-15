@@ -27,3 +27,37 @@ def fetch_bmkg_weather(adm4: str) -> dict:
     )
     response.raise_for_status()
     return response.json()
+
+
+def fetch_bmkg_latest_earthquake() -> dict:
+    response = requests.get(
+        "https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json",
+        headers={"User-Agent": "SARFlow-Agent/0.1"},
+        timeout=10,
+    )
+    response.raise_for_status()
+    return response.json()
+
+
+def fetch_bmkg_weather_warning_cap() -> str:
+    response = requests.get(
+        "https://www.bmkg.go.id/alerts/nowcast/id",
+        headers={"User-Agent": "SARFlow-Agent/0.1"},
+        timeout=10,
+    )
+    response.raise_for_status()
+    return response.text
+
+
+def fetch_petabencana_floods(admin: str | None = None) -> dict:
+    params = {}
+    if admin:
+        params["admin"] = admin
+    response = requests.get(
+        "https://api.petabencana.id/floods",
+        params=params,
+        headers={"User-Agent": "SARFlow-Agent/0.1"},
+        timeout=10,
+    )
+    response.raise_for_status()
+    return response.json()

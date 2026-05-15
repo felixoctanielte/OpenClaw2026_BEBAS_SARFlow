@@ -21,6 +21,8 @@ Target:
 - follow-up question keluar;
 - briefing dan timeline terbentuk;
 - draft laporan bisa dibuat.
+- update multi-turn bisa merge ke state lama;
+- konflik data ditandai untuk resolusi petugas.
 
 Checklist:
 - perkuat extraction untuk `pendaki_hilang` - done;
@@ -30,6 +32,7 @@ Checklist:
 - tambah field `pelapor tiba-tiba hilang/tidak bisa dihubungi` - done;
 - tambah field baju/jaket/celana korban - done;
 - tambah test untuk semua skenario - done.
+- tambah state update dan conflict detection - done.
 
 Next:
 - validasi wording briefing;
@@ -47,9 +50,9 @@ Target:
 - RAG membantu draft laporan.
 
 Checklist:
-- chunk knowledge base per topik;
-- tambah source metadata;
-- tampilkan source label di briefing;
+- chunk knowledge base per topik - done;
+- tambah source metadata - done;
+- tampilkan source label di briefing - done;
 - pastikan RAG tidak memberi keputusan evakuasi.
 
 ## Phase 3 - API Context

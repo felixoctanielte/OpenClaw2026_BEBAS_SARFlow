@@ -1,5 +1,8 @@
 from modules.extraction import extract_incident
+from modules.context import build_context_cards
 from modules.intake import build_follow_up_questions
+from modules.rag import load_rag_sources, search_rag
+from modules.state import merge_incidents
 
 
 def test_extract_demo_pendaki_hilang():
@@ -75,3 +78,53 @@ def test_extract_kecelakaan_air_case():
     assert "perahu mati mesin" in incident["victims"][0]["condition"]
     assert "gelombang tinggi" in incident["weather_or_field_condition"]
     assert incident["administrative_priority"] in ["Tinggi", "Kritis"]
+
+
+def test_update_merge_adds_coordinates_and_clothing():
+    initial = extract_incident(
+        "Ada 2 pendaki belum turun dari Pos 3 Gunung Lawu. Terakhir kontak jam 18.10. "
+        "Pelapor Rina nomor 081234567890."
+    )
+    update = extract_incident("Update: koordinat terakhir -7.6275, 111.1942. Korban pakai jaket merah celana hitam.")
+    merged = merge_incidents(initial, update, "Update koordinat dan pakaian.")
+
+    assert merged["incident_type"] == "pendaki_hilang"
+    assert merged["coordinates"] == {"lat": -7.6275, "lng": 111.1942}
+    assert merged["victims"][0]["last_clothing"] == "celana hitam, jaket merah"
+    assert "koordinat/link maps" not in merged["missing_fields"]
+    assert not merged["conflicts"]
+
+
+def test_update_marks_conflicting_victim_count():
+    initial = extract_incident(
+        "Ada 2 pendaki belum turun dari Pos 3 Gunung Lawu. Terakhir kontak jam 18.10. "
+        "Pelapor Rina nomor 081234567890."
+    )
+    update = extract_incident("Update: ternyata ada 3 pendaki di rombongan.")
+    merged = merge_incidents(initial, update, "Update jumlah korban.")
+
+    assert merged["victim_count"] == 2
+    assert merged["conflicts"]
+    assert merged["conflicts"][0]["field"] == "victim_count"
+
+
+def test_rag_loads_structured_sop_chunks():
+    docs = load_rag_sources("RAG_sources.yaml")
+    chunk_ids = [doc["id"] for doc in docs]
+    results = search_rag(docs, "identitas pelapor kontak verifikasi", limit=5)
+
+    assert any(doc_id.startswith("sar_sop_chunks:") for doc_id in chunk_ids)
+    assert any(result["id"].startswith("sar_sop_chunks:") for result in results)
+
+
+def test_context_cards_are_optional_and_fail_soft():
+    incident = extract_incident("Ada banjir di Desa Melati, 5 warga terjebak.")
+    cfg = {"agent": {"api": {"bmkg": {"enabled": False}, "petabencana": {"enabled": False}}}}
+
+    assert build_context_cards(cfg, incident, include_context=False) == []
+
+    cards = build_context_cards(cfg, incident, include_context=True)
+    assert cards[0]["source"] == "BMKG"
+    assert cards[0]["status"] == "skipped"
+    assert cards[1]["source"] == "PetaBencana"
+    assert cards[1]["status"] == "disabled"

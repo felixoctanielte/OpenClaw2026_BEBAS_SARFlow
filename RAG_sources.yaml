@@ -6,6 +6,15 @@
     - verification flow
     - timeline/report guardrails
 
+- id: sar_sop_chunks
+  path: knowledge_base/sop_chunks
+  description: Chunk terstruktur SOP SARFlow berdasarkan SK KBSN 154 dan guardrail proyek.
+  use_for:
+    - targeted retrieval
+    - intake checklist
+    - verification labels
+    - report/timeline rules
+
 - id: rag_design
   path: knowledge_base/rag_design.md
   description: Desain penggunaan RAG SARFlow dan guardrail.
@@ -20,4 +29,3 @@
   use_for:
     - external context
     - future API connectors
-

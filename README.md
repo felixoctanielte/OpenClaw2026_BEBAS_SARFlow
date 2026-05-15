@@ -42,12 +42,25 @@ Output yang diharapkan:
 
 ```powershell
 python run_orchestrator.py --command briefing --text "..."
+python run_orchestrator.py --command update --text "..."
 python run_orchestrator.py --command timeline --text "..."
 python run_orchestrator.py --command report --text "..."
 python run_orchestrator.py --command json --text "..."
 ```
 
 Tambahkan `--reset` kalau ingin memulai insiden demo baru agar timeline lama dibersihkan.
+
+Untuk melihat report dari state terakhir tanpa menambah event baru:
+
+```powershell
+python run_orchestrator.py --command report
+```
+
+Untuk optional API context card:
+
+```powershell
+python run_orchestrator.py --command briefing --include-context
+```
 
 ## Project Docs
 

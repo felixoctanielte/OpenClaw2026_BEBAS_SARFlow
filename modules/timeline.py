@@ -3,22 +3,25 @@ from datetime import datetime
 from pathlib import Path
 
 
-def _summary_from_incident(incident: dict) -> str:
+def _summary_from_incident(incident: dict, event_type: str) -> str:
     incident_type = incident.get("incident_type") or "kejadian"
     location = incident.get("location_text") or "lokasi belum jelas"
     victim_count = incident.get("victim_count")
     victims = f"{victim_count} korban" if victim_count is not None else "jumlah korban belum jelas"
+    if event_type == "case_update":
+        return f"Update kasus {incident_type} di {location}, {victims}."
     return f"Laporan awal {incident_type} di {location}, {victims}."
 
 
-def append_timeline_event(path: str, raw_text: str, incident: dict) -> dict:
+def append_timeline_event(path: str, raw_text: str, incident: dict, event_type: str = "new_report") -> dict:
     event = {
         "time": datetime.now().astimezone().isoformat(timespec="seconds"),
         "time_local": datetime.now().strftime("%H:%M WIB"),
         "source": "chat_pelapor",
-        "event_type": "new_report",
-        "summary": _summary_from_incident(incident),
+        "event_type": event_type,
+        "summary": _summary_from_incident(incident, event_type),
         "raw_text": raw_text,
+        "conflict_count": len(incident.get("conflicts", [])),
         "verification_status": "belum terverifikasi",
     }
     timeline_path = Path(path)
@@ -38,4 +41,3 @@ def load_timeline(path: str) -> list[dict]:
             continue
         events.append(json.loads(line))
     return events
-

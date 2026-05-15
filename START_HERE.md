@@ -29,8 +29,8 @@ AI tidak:
 
 Sudah ada:
 - runtime lokal `run_orchestrator.py`;
-- modul `intake`, `extraction`, `briefing`, `timeline`, `report`, dan `rag`;
-- knowledge base SOP;
+- modul `intake`, `extraction`, `briefing`, `timeline`, `report`, `rag`, `state`, dan `context`;
+- knowledge base SOP plus chunk RAG terstruktur;
 - template laporan dan timeline;
 - skill QwenPaw awal, tapi setup QwenPaw ditunda;
 - test untuk skenario pendaki hilang, gunung meletus, banjir, dan kecelakaan air.

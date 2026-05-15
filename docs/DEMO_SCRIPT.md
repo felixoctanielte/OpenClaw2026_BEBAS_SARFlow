@@ -97,6 +97,31 @@ Expected output:
 6. Tunjukkan timeline.
 7. Generate draft report.
 
+## Multi-turn Update Demo
+
+Input awal:
+
+```powershell
+python run_orchestrator.py --reset --command intake --text "Ada 2 pendaki belum turun dari Pos 3 Gunung Lawu. Terakhir kontak jam 18.10. Pelapor Rina nomor 081234567890."
+```
+
+Update koordinat dan pakaian:
+
+```powershell
+python run_orchestrator.py --command update --text "Update: koordinat terakhir -7.6275, 111.1942. Korban pakai jaket merah celana hitam."
+```
+
+Update konflik jumlah korban:
+
+```powershell
+python run_orchestrator.py --command update --text "Update: ternyata ada 3 pendaki di rombongan."
+```
+
+Expected:
+- koordinat dan pakaian masuk ke state;
+- jumlah korban lama tidak di-overwrite;
+- konflik `victim_count` muncul dan perlu resolusi petugas.
+
 ## Safety Line For Pitch
 
 SARFlow tidak mengambil keputusan evakuasi final. Semua output adalah rekomendasi administratif untuk diverifikasi petugas.

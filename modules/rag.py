@@ -10,8 +10,21 @@ def load_rag_sources(config_path: str) -> list[dict]:
     docs = []
     for source in sources:
         path = Path(source["path"])
-        text = path.read_text(encoding="utf-8") if path.exists() else ""
-        docs.append({**source, "text": text})
+        if path.is_dir():
+            for child in sorted(path.glob("*.md")):
+                text = child.read_text(encoding="utf-8")
+                docs.append(
+                    {
+                        **source,
+                        "id": f"{source['id']}:{child.stem}",
+                        "path": str(child),
+                        "text": text,
+                        "metadata": _parse_frontmatter(text),
+                    }
+                )
+        else:
+            text = path.read_text(encoding="utf-8") if path.exists() else ""
+            docs.append({**source, "text": text, "metadata": _parse_frontmatter(text)})
     return docs
 
 
@@ -37,4 +50,17 @@ def _best_snippet(text: str, query_terms: list[str]) -> str:
     best = max(paragraphs, key=lambda part: sum(part.lower().count(term) for term in query_terms))
     compact = " ".join(best.split())
     return compact[:220] + ("..." if len(compact) > 220 else "")
+
+
+def _parse_frontmatter(text: str) -> dict:
+    if not text.startswith("---"):
+        return {}
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        return {}
+    try:
+        parsed = yaml.safe_load(parts[1]) or {}
+    except yaml.YAMLError:
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
 

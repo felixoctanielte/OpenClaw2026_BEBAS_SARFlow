@@ -9,6 +9,13 @@ Karena Discord bot sudah disiapkan, jangan mulai dari bikin bot baru. Mulai dari
 3. Pakai Discord sebagai channel intake laporan.
 4. Demo dengan 1 skenario dummy: pendaki hilang.
 
+Current prepared files:
+
+- `qwenpaw_workspace/SARFLOW.md`
+- `qwenpaw_skill/sarflow/`
+- `sarflow_qwenpaw_skill.zip`
+- `STATUS_REPORT.md`
+
 ## How QwenPaw Fits
 
 QwenPaw punya tiga bagian yang relevan:
@@ -130,6 +137,11 @@ C:\Users\felix\.qwenpaw\workspaces\default\skills\sarflow\
 
 Lalu enable skill di Console.
 
+Recommended:
+
+- Import `sarflow_qwenpaw_skill.zip` through QwenPaw UI if possible.
+- If zip import fails, copy folder `qwenpaw_skill/sarflow/` manually to the workspace skills folder.
+
 Kalau agent id kamu bukan `default`, pakai folder agent itu:
 
 ```text
@@ -207,6 +219,15 @@ Jangan dikerjakan dulu:
 - Prediksi lokasi korban.
 - Routing evakuasi.
 - Auth kompleks.
+
+## Local Runtime Before QwenPaw
+
+Before importing into QwenPaw, verify locally:
+
+```powershell
+python -m pytest -q
+python run_orchestrator.py --reset --command intake --text "Ada banjir di Desa Melati, 5 warga terjebak di rumah. Pelapor Andi nomor 081222333444. Air naik sejak jam 20.15, akses jalan utama tertutup."
+```
 
 ## Sources
 

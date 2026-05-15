@@ -76,7 +76,40 @@ Setiap input/update menjadi event:
 
 Timeline menjadi sumber utama untuk draft laporan.
 
-## 5. Draft Report
+## 5. Multi-turn Update and Conflict Detection
+
+Jika ada update baru, SARFlow harus:
+- membaca state insiden sebelumnya;
+- mengisi field yang tadinya kosong;
+- tidak menimpa data penting yang berbeda secara diam-diam;
+- mencatat konflik seperti perubahan jumlah korban, lokasi, kontak, atau waktu terakhir.
+
+Contoh konflik:
+
+```text
+victim_count: sebelumnya 2, update masuk 3
+```
+
+Konflik harus diberi status:
+
+```text
+needs_officer_resolution
+```
+
+## 6. External Context Cards
+
+API eksternal bersifat opsional.
+
+Context card harus berisi:
+- sumber;
+- tipe context;
+- status: `ok`, `disabled`, `skipped`, atau `error`;
+- ringkasan;
+- trust label: `external_context_not_case_fact`.
+
+Context card tidak boleh diperlakukan sebagai fakta kasus.
+
+## 7. Draft Report
 
 Draft laporan berisi:
 - identitas insiden;
@@ -84,6 +117,8 @@ Draft laporan berisi:
 - timeline;
 - informasi terkonfirmasi dari laporan awal;
 - informasi yang masih kurang;
+- konflik data;
+- context eksternal bila digunakan;
 - catatan safety.
 
 Draft selalu diberi label:

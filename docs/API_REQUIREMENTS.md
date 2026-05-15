@@ -38,6 +38,18 @@ Untuk runtime lokal saat ini, belum wajib memakai API eksternal.
 - Untuk BMKG, jangan scraping halaman web; gunakan endpoint API resmi.
 - Kalau API gagal, agent tetap jalan dengan mode manual.
 
+## Implemented Wrapper Functions
+
+File: `modules/api_clients.py`
+
+- `fetch_bmkg_weather(adm4)`
+- `fetch_bmkg_latest_earthquake()`
+- `fetch_bmkg_weather_warning_cap()`
+- `fetch_petabencana_reports(disaster, admin)`
+- `fetch_petabencana_floods(admin)`
+
+These wrappers are not enabled by default. They are called only when a future context feature enables them through `agent-config.yml` and CLI flags.
+
 ## Sources Checked
 
 - BMKG Prakiraan Cuaca: https://data.bmkg.go.id/prakiraan-cuaca/

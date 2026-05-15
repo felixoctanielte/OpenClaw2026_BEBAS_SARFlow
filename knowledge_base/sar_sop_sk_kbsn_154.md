@@ -3,7 +3,7 @@
 Source file:
 `C:\Users\felix\Downloads\scan SK KBSN 154 TENTANG STANDAR PELAYANAN PUBLIK.pdf`
 
-Note: The PDF is scanned, so this file is a manual summary from the visible pages, especially pages 6-8.
+Note: The PDF is scanned, so this file is a manual summary from the visible pages, especially pages 6-8. Structured retrieval chunks are available under `knowledge_base/sop_chunks/`.
 
 ## Document Context
 

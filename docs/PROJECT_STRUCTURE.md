@@ -19,11 +19,14 @@
 - `modules/timeline.py`: menyimpan timeline event.
 - `modules/report.py`: membuat draft laporan.
 - `modules/rag.py`: retrieval sederhana dari knowledge base.
+- `modules/state.py`: merge update multi-turn dan conflict detection.
+- `modules/context.py`: context card opsional dari API eksternal.
 - `modules/api_clients.py`: wrapper API eksternal, masih opsional.
 
 ## Knowledge Base
 
 - `knowledge_base/sar_sop_sk_kbsn_154.md`: ringkasan SOP dari SK KBSN 154.
+- `knowledge_base/sop_chunks/`: chunk SOP/RAG terstruktur dengan metadata.
 - `knowledge_base/rag_design.md`: desain RAG.
 - `knowledge_base/api_sources.md`: referensi API eksternal.
 
@@ -46,4 +49,3 @@ Untuk sekarang, jangan fokus ke QwenPaw dulu. Pastikan runtime lokal dan demo st
 - `data/timeline.jsonl`: timeline runtime, generated.
 
 File generated tidak perlu masuk submission sebagai source utama. `data/.gitkeep` hanya menjaga folder tetap ada.
-

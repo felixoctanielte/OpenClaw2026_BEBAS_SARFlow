@@ -37,6 +37,8 @@ Belum terverifikasi - perlu konfirmasi petugas.
 6. Produce concise incident briefing.
 7. Add a timeline event.
 8. If asked for final report, draft it from the timeline only.
+9. For follow-up updates, merge new data into previous incident state when available.
+10. If new data conflicts with prior data, mark it as `needs_officer_resolution` instead of silently overwriting.
 
 ## Optional Tool Script
 
@@ -97,4 +99,4 @@ Timeline:
 If the user says `briefing`, return only the incident briefing.
 If the user says `timeline`, return only timeline events.
 If the user says `report`, return a draft final report.
-
+If the user says `update`, treat the message as follow-up information for an existing case.

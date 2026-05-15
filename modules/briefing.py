@@ -4,13 +4,19 @@ def _value(value, fallback="-"):
     return value
 
 
-def build_briefing(incident: dict, follow_up_questions: list[str], sop_context: list[dict] | None = None) -> str:
+def build_briefing(
+    incident: dict,
+    follow_up_questions: list[str],
+    sop_context: list[dict] | None = None,
+    context_cards: list[dict] | None = None,
+    title: str = "SARFLOW INTAKE",
+) -> str:
     victim = incident["victims"][0] if incident.get("victims") else {}
     missing = incident.get("missing_fields") or []
     red_flags = incident.get("red_flags") or []
 
     lines = [
-        "SARFLOW INTAKE",
+        title,
         "Status: Belum terverifikasi - perlu konfirmasi petugas.",
         "",
         "Ringkasan:",
@@ -46,12 +52,26 @@ def build_briefing(incident: dict, follow_up_questions: list[str], sop_context: 
     else:
         lines.append("- Tidak perlu pertanyaan lanjutan kritis saat ini; lanjutkan verifikasi petugas.")
 
+    conflicts = incident.get("conflicts") or []
+    if conflicts:
+        lines.extend(["", "Konflik data perlu resolusi petugas:"])
+        for conflict in conflicts:
+            lines.append(
+                f"- {conflict['field']}: sebelumnya `{conflict['existing']}`, update masuk `{conflict['incoming']}`"
+            )
+
+    if context_cards:
+        lines.extend(["", "Context eksternal:"])
+        for card in context_cards:
+            lines.append(f"- {card['source']} ({card['status']}): {card['summary']}")
+
     lines.extend(
         [
             "",
             "Catatan keselamatan:",
             "- Output ini rekomendasi administratif, bukan keputusan evakuasi final.",
             "- Informasi publik/keluarga hanya boleh memakai data yang sudah diverifikasi petugas.",
+            "- Data API/context eksternal bukan fakta kasus sampai diverifikasi.",
         ]
     )
 
