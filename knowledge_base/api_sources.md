@@ -48,6 +48,35 @@ Example endpoint:
 https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4={kode_wilayah_tingkat_iv}
 ```
 
+## BMKG Earthquake Data
+
+Docs:
+https://data.bmkg.go.id/gempabumi/
+
+Relevant data:
+- Latest earthquake.
+- M 5.0+ earthquake list.
+- Felt earthquake list.
+- Tsunami-potential earthquake data.
+
+Potential SARFlow usage:
+- Context card for earthquake-related reports.
+- Do not treat as SAR case verification unless confirmed by officer.
+
+## BMKG Weather Early Warning / CAP
+
+Docs:
+https://data.bmkg.go.id/peringatan-dini-cuaca/
+
+Relevant data:
+- Weather early warning / nowcast.
+- CAP XML format.
+- Province RSS feed and detail CAP XML.
+
+Potential SARFlow usage:
+- Add weather warning context to briefing.
+- Label as external context with attribution.
+
 ## Satu Peta MKG
 
 Docs:
@@ -77,3 +106,15 @@ Potential SARFlow usage:
 
 Important limitation:
 - This is better for historical/reference context than real-time SAR operations.
+
+## PVMBG / MAGMA Indonesia
+
+Docs/source:
+https://magma.esdm.go.id/
+
+Potential SARFlow usage:
+- Official manual reference for volcano status and eruption information.
+- Use for future volcano context only after confirming a stable official API endpoint.
+
+Important limitation:
+- Do not scrape pages or rely on undocumented endpoints for MVP.

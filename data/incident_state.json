@@ -1,39 +1,35 @@
 {
-  "incident_type": "pendaki_hilang",
-  "location_text": "Pos 3 Gunung Lawu",
+  "incident_type": "gunung_meletus",
+  "location_text": "sekitar Desa Sumber",
   "coordinates": {
     "lat": null,
     "lng": null
   },
-  "report_time": "2026-05-15T11:41:02+07:00",
-  "last_seen_time": "18:10 WIB",
-  "victim_count": 2,
+  "report_time": "2026-05-15T11:48:09+07:00",
+  "last_seen_time": "16:30 WIB",
+  "victim_count": 3,
   "victims": [
     {
       "name": null,
       "age": null,
-      "condition": "logistik tinggal sedikit, sinyal putus",
-      "last_clothing": null,
+      "condition": null,
+      "last_clothing": "baju biru, celana hitam",
       "notes": null
     }
   ],
   "reporter": {
-    "name": null,
-    "contact": "081234567890",
-    "relation": "teman/rombongan"
+    "name": "Budi",
+    "contact": "081111111111",
+    "relation": "warga sekitar"
   },
-  "weather_or_field_condition": "hujan, sinyal putus",
+  "weather_or_field_condition": null,
   "access_notes": null,
   "missing_fields": [
-    "nama pelapor",
-    "koordinat/link maps",
-    "pakaian terakhir korban, termasuk baju dan celana"
+    "koordinat/link maps"
   ],
   "red_flags": [
     "lokasi/koordinat belum presisi",
     "korban lebih dari satu",
-    "cuaca/lapangan berisiko",
-    "logistik/komunikasi terbatas",
     "medan/lokasi berisiko"
   ],
   "administrative_priority": "Tinggi",
@@ -44,9 +40,9 @@
     "coordinates": "missing",
     "last_seen_time": "confirmed",
     "victim_count": "confirmed",
-    "reporter_name": "missing",
+    "reporter_name": "confirmed",
     "reporter_contact": "confirmed",
-    "last_clothing": "missing"
+    "last_clothing": "confirmed"
   },
-  "risk_score": 10
+  "risk_score": 6
 }

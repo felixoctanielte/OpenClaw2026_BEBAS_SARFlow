@@ -21,10 +21,10 @@ agent:
     bmkg:
       enabled: false
       base_url: "https://api.bmkg.go.id/publik/prakiraan-cuaca"
-      api_key_env: "BMKG_API_KEY"
+      attribution: "Sumber: BMKG"
     petabencana:
       enabled: false
-      base_url: "https://data.petabencana.id"
+      base_url: "https://api.petabencana.id"
       user_agent: "SARFlow-Agent/0.1"
 
 intake:
@@ -41,4 +41,3 @@ intake:
 storage:
   state_file: data/incident_state.json
   timeline_file: data/timeline.jsonl
-
